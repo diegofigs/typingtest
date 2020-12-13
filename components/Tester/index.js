@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
+import randomWords from 'random-words';
 import faker from 'faker';
 
 import styles from './Tester.module.css';
@@ -8,7 +9,7 @@ export default function Tester() {
   const [wordAmount, ] = useState(50);
   const [words, setWords] = useState([]);
   useEffect(() => {
-    setWords(new Array(wordAmount).fill().map(_ => faker.random.word().toLowerCase()));
+    setWords(randomWords(wordAmount).map(_ => _.toLowerCase()));
   }, [wordAmount]);
 
   const [typedWords, setTypedWords] = useState([]);
@@ -46,7 +47,7 @@ export default function Tester() {
       </div>
       <div className={styles.bar}>
         <input className={inputClass} value={input} onChange={e => setInput(e.target.value)} onKeyDown={onKeyDown} type="text" spellCheck="false" autoComplete="off" autoCorrect="off" autoCapitalize="off" tabIndex="0" />
-        <button className={classNames(styles['retry-btn'], 'retry')} onClick={() => setWords([...words].map(_ => faker.random.word().toLowerCase()))}>Retry</button>
+        <button className={classNames(styles['retry-btn'], 'retry')} onClick={() => setWords(randomWords(wordAmount).map(_ => _.toLowerCase()))}>Retry</button>
       </div>
       <style jsx>{`
         .area {

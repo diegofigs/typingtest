@@ -2,32 +2,25 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Tester from '../components/Tester';
 
-export default function Home() {
+export default function Home({ theme }) {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ background: theme.background.main }}>
       <Head>
         <title>TypingTest.tech</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h2 className={styles.header}>
+      <h2 className={styles.header} style={{ color: theme.text }}>
         TypingTest.tech
       </h2>
 
-      <Tester />
+      <main>
+        <Tester theme={theme} />
+      </main>
 
-      <div className={styles.footer}>
+      <footer className={styles.footer}>
         <img src="https://madewithlove.now.sh/pr?heart=true" alt="Made with love in Puerto Rico" />
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.button}
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
-        </a>
-      </div>
+      </footer>
     </div>
-  )
+  );
 }

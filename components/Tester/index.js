@@ -5,7 +5,7 @@ import randomWords from 'random-words';
 import styles from './Tester.module.css';
 
 export default function Tester({ theme }) {
-  const [wordAmount, ] = useState(10);
+  const [wordAmount, ] = useState(50);
   const [words, setWords] = useState([]);
   const [wpm, setWPM] = useState();
   const [accuracy, setAccuracy] = useState();
@@ -33,14 +33,13 @@ export default function Tester({ theme }) {
   }, [input, currentWord, startTime]);
   useEffect(() => {
     if (words.length && words.length === typedWords.length) {
-      const correctWords = typedWords.filter((typed, index) => typed === words[index]);
-
-      const finishTime = (Date.now() - startTime) / 60000; // convert to minutes: 1s / 1000ms * 1m / 60s
+      
+      // TODO: calc on word amount update
       const totalKeys = words.reduce((total, word) => total + word.length, 0);
-
-      console.log(typedWords, words);
-      console.log(correctKeys, totalKeys);
       setAccuracy(Math.floor((correctKeys / totalKeys) * 100));
+
+      const correctWords = typedWords.filter((typed, index) => typed === words[index]);
+      const finishTime = (Date.now() - startTime) / 60000; // convert to minutes: 1s / 1000ms * 1m / 60s
       setWPM(Math.floor(correctWords.length / finishTime));
     }
   }, [words, typedWords]);

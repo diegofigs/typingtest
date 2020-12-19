@@ -25,13 +25,13 @@ export default function Home({ theme }) {
         />
       </Head>
 
-      <h2 className={styles.header} style={{ color: theme.text }}>
-        TypingTest.tech
-      </h2>
+      <header>
+        <h1 className={styles.header} style={{ color: theme.text }}>
+          TypingTest.tech
+        </h1>
+      </header>
 
-      <main>
-        <Tester theme={theme} />
-      </main>
+      <Tester theme={theme} />
 
       <footer className={styles.footer}>
         <img src="https://madewithlove.now.sh/pr?heart=true" alt="Made with love in Puerto Rico" />

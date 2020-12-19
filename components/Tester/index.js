@@ -1,17 +1,20 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import randomWords from 'random-words';
 
 import styles from './Tester.module.css';
 
+const options = [10, 25, 50, 100];
+
 export default function Tester({ theme }) {
-  const [wordAmount, ] = useState(50);
+  const [wordAmount, setWordAmount] = useState(50);
   const [words, setWords] = useState([]);
-  const [wpm, setWPM] = useState();
-  const [accuracy, setAccuracy] = useState();
+  const [totalKeys, setTotalKeys] = useState(0);
   useEffect(() => {
-    setWords(generate(wordAmount));
-  }, [wordAmount]);
+    const generatedWords = generate(wordAmount);
+    setWords(generatedWords);
+    setTotalKeys(generatedWords.reduce((total, word) => total + word.length + 1, 0));
+  }, []);
 
   const [typedWords, setTypedWords] = useState([]);
   const [currentWord, setCurrentWord] = useState(0);
@@ -20,7 +23,9 @@ export default function Tester({ theme }) {
   const onKeyDown = useCallback((event) => {
     if (event.key === ' ') {
       event.preventDefault();
-      setCorrectKeys(correct => correct + input.split('').reduce((total, char, i) => words[currentWord][i] === char ? total + 1 : total, 0));
+      console.log(input);
+      const isWordCorrect = input === words[currentWord];
+      setCorrectKeys(correct => correct + input.split('').reduce((total, char, i) => words[currentWord][i] === char ? total + 1 : total, isWordCorrect ? 1 : 0));
       setTypedWords(typed => ([...typed, input]));
       setCurrentWord(current => current + 1);
       setInput('');
@@ -31,24 +36,34 @@ export default function Tester({ theme }) {
   useEffect(() => {
     if (input.length === 1 && currentWord === 0 && !startTime) setStartTime(Date.now());
   }, [input, currentWord, startTime]);
+
+  const [wpm, setWPM] = useState();
+  useEffect(() => {
+    const indexOfLatestWord = typedWords.length;
+    if (indexOfLatestWord > 0) {
+      const isWordCorrect = typedWords[indexOfLatestWord] === words[indexOfLatestWord];
+      const totalEntries = typedWords.reduce((total, word) => total + word.length, isWordCorrect ? 1 : 0);
+      const finishTime = (Date.now() - startTime) / 60000; // convert to minutes: 1s / 1000ms * 1m / 60s
+      setWPM(Math.floor((totalEntries / 5) / finishTime));
+
+      // TODO: calculate net WPM (gross wpm - uncorrected errors/min)
+    }
+  }, [typedWords, startTime]);
+
+  const [accuracy, setAccuracy] = useState();
   useEffect(() => {
     if (words.length && words.length === typedWords.length) {
-      
-      // TODO: calc on word amount update
-      const totalKeys = words.reduce((total, word) => total + word.length, 0);
       setAccuracy(Math.floor((correctKeys / totalKeys) * 100));
-
-      const correctWords = typedWords.filter((typed, index) => typed === words[index]);
-      const finishTime = (Date.now() - startTime) / 60000; // convert to minutes: 1s / 1000ms * 1m / 60s
-      setWPM(Math.floor(correctWords.length / finishTime));
     }
   }, [words, typedWords]);
 
-  const reset = useCallback(() => {
+  const reset = useCallback((amount) => {
+    const generatedWords = generate(amount);
     setTypedWords([]);
     setCorrectKeys(0);
     setCurrentWord(0);
-    setWords(generate(wordAmount));
+    setWords(generatedWords);
+    setTotalKeys(generatedWords.reduce((total, word) => total + word.length + 1, 0));
     setStartTime();
     setWPM();
     setAccuracy();
@@ -60,7 +75,12 @@ export default function Tester({ theme }) {
   });
   return <div className={styles.root}>
     <div className={styles.bar}>
-      <span className="stats">Amount: {wordAmount}</span>
+      <div className="stats">Amount: {options.map((amount, index) => {
+        return <Fragment key={`options-${index}`}>
+          <a style={{ cursor: 'pointer' }} className={classNames({ highlight: amount === wordAmount })} onClick={() => { setWordAmount(amount); reset(amount); }}>{amount}</a>
+          {index !== options.length - 1 ? ' / ' : ''}
+        </Fragment>;
+      })}</div>
       <span className="stats">WPM: {wpm ? wpm : 'XX'} ACC: {accuracy ? accuracy : 'XX'}</span>
     </div>
     <div className={classNames(styles.area, 'area')}>
@@ -75,12 +95,12 @@ export default function Tester({ theme }) {
             correct: isCorrect,
             wrong: isWrong
           });
-          return <span key={index} className={textClass}>{word} </span>;
+          return <span key={`words-${index}`} className={textClass}>{word} </span>;
         })}
       </div>
       <div className={styles.bar}>
         <input className={inputClass} value={input} onChange={e => setInput(e.target.value)} onKeyDown={onKeyDown} type="text" spellCheck="false" autoComplete="off" autoCorrect="off" autoCapitalize="off" tabIndex="0" />
-        <button className={classNames(styles.retry, 'retry')} onClick={() => reset()}>Retry</button>
+        <button className={classNames(styles.retry, 'retry')} onClick={() => reset(wordAmount)}>Retry</button>
       </div>
     </div>
     <style jsx>{`

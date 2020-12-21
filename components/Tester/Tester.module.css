@@ -5,7 +5,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transform: translateY(-2vh);
 }
 
 .bar {
@@ -15,7 +14,7 @@
 
 .area {
   margin-top: 1rem;
-  padding: 1.4rem 1rem;
+  padding: 1rem;
   border-radius: 0.4rem;
 }
 
@@ -24,13 +23,17 @@
   overflow: hidden;
 }
 
+.textbox {
+  margin: 0;
+}
+
 .input {
   width: 100%;
   border: none;
   font: inherit;
   margin-right: 1rem;
   border-radius: 0.2rem;
-  font-size: 1.2rem;
+  font-size: 20px;
 }
 
 .retry {

@@ -1,0 +1,18 @@
+.footer {
+  margin-bottom: 1.2rem;
+  display: flex;
+}
+
+.footer * {
+  text-decoration: none;
+  margin: 0 .5rem;
+  color: inherit;
+}
+
+.footer .button {
+  cursor: pointer;
+}
+
+.footer a:visited {
+  color: unset;
+}

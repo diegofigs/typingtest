@@ -1,6 +1,7 @@
 import Head from 'next/head';
+
 import styles from '../styles/Home.module.css';
-import Tester from '../components/Tester';
+import { Footer, Navbar, Tester } from 'components';
 
 export default function Home({ theme }) {
   return (
@@ -25,17 +26,9 @@ export default function Home({ theme }) {
         />
       </Head>
 
-      <header>
-        <h1 className={styles.header} style={{ color: theme.text }}>
-          TypingTest.tech
-        </h1>
-      </header>
-
+      <Navbar theme={theme} />
       <Tester theme={theme} />
-
-      <footer className={styles.footer}>
-        <img src="https://madewithlove.now.sh/pr?heart=true" alt="Made with love in Puerto Rico" />
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import randomWords from 'random-words';
 
 import styles from './Tester.module.css';
-import { useInterval } from '@hooks';
+import { useInterval, useFocus } from '@hooks';
 import { calculateWPM, calculateNetWPM, calculateAccuracy, calculateCorrectKeys } from '@core/equations';
 
 const options = [10, 25, 50, 100];
@@ -18,6 +18,9 @@ export default function Tester({ theme }) {
   const text = useMemo(() => {
     return words.join(' ');
   }, [words]);
+
+  const [inputRef, setFocus] = useFocus();
+  useEffect(setFocus, [inputRef.current]);
 
   const [input, setInput] = useState('');
   const [startTime, setStartTime] = useState();
@@ -66,7 +69,7 @@ export default function Tester({ theme }) {
     <div className={styles.bar}>
       <div className="stats">Amount: {options.map((amount, index) => {
         return <Fragment key={`options-${index}`}>
-          <a style={{ cursor: 'pointer' }} className={classNames({ highlight: amount === wordAmount })} onClick={() => { setWordAmount(amount); reset(amount); }}>{amount}</a>
+          <a style={{ cursor: 'pointer' }} className={classNames({ highlight: amount === wordAmount })} onClick={() => { setWordAmount(amount); reset(amount); setFocus(); }}>{amount}</a>
           {index !== options.length - 1 ? ' / ' : ''}
         </Fragment>;
       })}</div>
@@ -91,7 +94,7 @@ export default function Tester({ theme }) {
         })}
       </div>
       <div className={styles.bar}>
-        <input disabled={input.length === text.length} className={styles.input} value={input} onChange={e => setInput(e.target.value)} type="text" spellCheck="false" autoComplete="off" autoCorrect="off" autoCapitalize="off" tabIndex="0" />
+        <input ref={inputRef} disabled={input.length === text.length} className={styles.input} value={input} onChange={e => setInput(e.target.value)} type="text" spellCheck="false" autoComplete="off" autoCorrect="off" autoCapitalize="off" />
         <button className={classNames(styles.retry, 'retry')} onClick={() => reset(wordAmount)}>Retry</button>
       </div>
     </div>
@@ -115,13 +118,11 @@ export default function Tester({ theme }) {
         opacity: 1;
       }
       .blinking {
-        background-color: ${theme.highlight};
+        border-left: 1px solid transparent;
         color: ${theme.text};
-        animation: blink 1s linear infinite;
+        animation: blink 1.5s cubic-bezier(.215, .61, .355, 1) forwards infinite;
         @keyframes blink {
-          0% { opacity:1; }
-          50% { opacity:0; }
-          100% { opacity:1; }
+          50% { border-color: ${theme.highlight}; }
         }
       }
       .correct {

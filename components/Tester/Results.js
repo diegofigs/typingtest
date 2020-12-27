@@ -5,10 +5,15 @@ import dark from 'themes/constant/dark';
 const timeFormat = 'HH:mm:ss a';
 
 export default function Results({ events }) {
-  const timestamps = events.map(({ t }) => new Date(t));
-  const wpm = events.map(({ wpm }, i) => ({ t: timestamps[i], y: wpm }));
-  const raw = events.map(({ raw }, i) => ({ t: timestamps[i], y: raw }));
-  const errors = events.map(({ errors }, i) => ({ t: timestamps[i], y: errors }));
+  const { timestamps, wpm, raw, errors } = events.reduce((stats, event) => {
+    const t = new Date(event.t);
+    return {
+      timestamps: [...stats.timestamps, t],
+      wpm: [...stats.wpm, { t, y: event.wpm }],
+      raw: [...stats.raw, { t, y: event.raw }],
+      errors: [...stats.errors, { t, y: event.errors }],
+    };
+  }, { timestamps: [], wpm: [], raw: [], errors: []});
 
   const data = {
     labels: timestamps,

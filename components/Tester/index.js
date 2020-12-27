@@ -6,6 +6,8 @@ import styles from './Tester.module.css';
 import { useInterval, useFocus } from '@hooks';
 import { calculateWPM, calculateNetWPM, calculateAccuracy, calculateCorrectKeys } from '@core/equations';
 
+import Results from './Results';
+
 const options = [10, 25, 50, 100];
 
 export default function Tester({ theme }) {
@@ -98,6 +100,7 @@ export default function Tester({ theme }) {
         <input ref={inputRef} disabled={input.length === text.length} className={styles.input} value={input} onChange={e => setInput(e.target.value)} type="text" spellCheck="false" autoComplete="off" autoCorrect="off" autoCapitalize="off" />
         <button className={classNames(styles.retry, 'retry')} onClick={() => reset(wordAmount)}>Retry</button>
       </div>
+      {Boolean(accuracy) && <Results events={events}/>}
     </div>
     <style jsx>{`
       .stats {

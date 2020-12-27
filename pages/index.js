@@ -2,8 +2,10 @@ import Head from 'next/head';
 
 import styles from '../styles/Home.module.css';
 import { Footer, Navbar, Tester } from 'components';
+import { useTheme } from '@theme';
 
-export default function Home({ theme }) {
+export default function Home() {
+  const theme = useTheme();
   return (
     <div className={styles.container} style={{ background: theme.background.main }}>
       <Head>

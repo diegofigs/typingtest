@@ -68,8 +68,9 @@ export default function Tester({ theme }) {
   return <div className={styles.root}>
     <div className={styles.bar}>
       <div className="stats">Amount: {options.map((amount, index) => {
+        const isCurrentAmount = amount === wordAmount;
         return <Fragment key={`options-${index}`}>
-          <a style={{ cursor: 'pointer' }} className={classNames({ highlight: amount === wordAmount })} onClick={() => { setWordAmount(amount); reset(amount); setFocus(); }}>{amount}</a>
+          <a style={isCurrentAmount ? undefined : { cursor: 'pointer' }} className={classNames({ highlight: isCurrentAmount })} onClick={() => { setWordAmount(amount); reset(amount); setFocus(); }}>{amount}</a>
           {index !== options.length - 1 ? ' / ' : ''}
         </Fragment>;
       })}</div>

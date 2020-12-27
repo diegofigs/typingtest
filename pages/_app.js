@@ -1,8 +1,12 @@
 import '../styles/globals.css';
-import theme from '../themes/dark';
+import { ThemeProvider } from '@theme';
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} theme={theme}/>
+  return (
+    <ThemeProvider>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  )
 }
 
 export default MyApp

@@ -6,6 +6,7 @@ import styles from './Tester.module.css';
 import { useInterval, useFocus } from '@hooks';
 import { calculateWPM, calculateNetWPM, calculateAccuracy, calculateCorrectKeys } from '@core/equations';
 
+import { ToggleTheme } from 'components';
 import Results from './Results';
 
 const options = [10, 25, 50, 100];
@@ -68,15 +69,18 @@ export default function Tester({ theme }) {
   });
 
   return <div className={styles.root}>
-    <div className={styles.bar}>
-      <div className="stats">Amount: {options.map((amount, index) => {
+    <div className={classNames(styles.bar, 'stats')}>
+      <span>
+        Theme: <ToggleTheme />
+      </span>
+      <div>Amount: {options.map((amount, index) => {
         const isCurrentAmount = amount === wordAmount;
         return <Fragment key={`options-${index}`}>
           <a style={isCurrentAmount ? undefined : { cursor: 'pointer' }} className={classNames({ highlight: isCurrentAmount })} onClick={() => { setWordAmount(amount); reset(amount); setFocus(); }}>{amount}</a>
           {index !== options.length - 1 ? ' / ' : ''}
         </Fragment>;
       })}</div>
-      <span className="stats">WPM: {netWPM ? netWPM : 'XX'} ACC: {accuracy ? `${accuracy} %` : 'XX'}</span>
+      <span>WPM: {netWPM ? netWPM : 'XX'} ACC: {accuracy ? `${accuracy} %` : 'XX'}</span>
     </div>
     <div className={classNames(styles.area, 'area')}>
       <div className={styles.display}>

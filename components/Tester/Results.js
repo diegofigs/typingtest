@@ -1,10 +1,43 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import dark from 'themes/constant/dark';
+import { useTheme } from '@theme';
 
 const timeFormat = 'HH:mm:ss a';
+const labelFormat = 'mm:ss';
+const options = {
+  tooltips: {
+    mode: 'x',
+  },
+  scales: {
+    xAxes: [
+      {
+        type: 'time',
+        distribution: 'series',
+        time: {
+          unit: 'second',
+          displayFormats: {
+            second: labelFormat
+          },
+          tooltipFormat: timeFormat
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Seconds'
+        }
+      },
+    ],
+    yAxes: [
+      {
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    ],
+  },
+};
 
 export default function Results({ events }) {
+  const theme = useTheme();
   const { timestamps, wpm, raw, errors } = events.reduce((stats, event) => {
     const t = new Date(event.t);
     return {
@@ -22,54 +55,24 @@ export default function Results({ events }) {
         label: 'WPM',
         data: wpm,
         fill: false,
-        backgroundColor: dark.highlight,
-        borderColor: dark.highlight,
+        backgroundColor: theme.highlight,
+        borderColor: theme.highlight,
       },
       {
         label: 'Raw WPM',
         data: raw,
         fill: false,
-        backgroundColor: dark.text,
-        borderColor: dark.text,
+        backgroundColor: theme.background.main,
+        borderColor: theme.background.main,
       },
       {
         label: 'Errors',
         data: errors,
         fill: false,
-        backgroundColor: dark.wrong,
-        borderColor: dark.wrong,
+        backgroundColor: theme.wrong,
+        borderColor: theme.wrong,
       }
     ],
-  }
-  
-  const options = {
-    tooltips: {
-      mode: 'x',
-    },
-    scales: {
-      xAxes: [
-        {
-          type: 'time',
-          distribution: 'series',
-          time: {
-            parser: timeFormat,
-            unit: 'second',
-            tooltipFormat: timeFormat
-          },
-          scaleLabel: {
-            display: true,
-            labelString: 'Seconds'
-          }
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-        },
-      ],
-    },
   };
 
 

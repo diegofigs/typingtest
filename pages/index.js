@@ -30,7 +30,7 @@ export default function Home() {
 
       <Navbar theme={theme} />
       <Tester theme={theme} />
-      <Footer />
+      <Footer theme={theme} />
     </div>
   );
 }
